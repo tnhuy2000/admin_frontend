@@ -1,0 +1,56 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "content": "Content",
+    "allContent": "All Content",
+    "createNew": "Create New",
+    "categories": "Categories",
+    "media": "Media",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "adminPanelLogin": "Admin Panel Login",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "overview": "Overview"
+  },
+  "content": {
+    "title": "Content Management",
+    "createNew": "Create New Content",
+    "categories": "Content Categories",
+    "comingSoon": "Coming Soon"
+  },
+  "media": {
+    "title": "Media Management",
+    "comingSoon": "Coming Soon"
+  },
+  "settings": {
+    "title": "Settings",
+    "comingSoon": "Coming Soon"
+  }
+}

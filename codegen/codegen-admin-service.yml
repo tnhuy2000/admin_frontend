@@ -1,0 +1,27 @@
+overwrite: true
+schema: ${GRAPHQL_URI_GEN}
+documents:
+  - 'codegen/graphql-definition/admin-service/**/*.ts'
+  - 'codegen/graphql-definition/admin-service/**/*.graphql'
+generates:
+  src/graphql/generated.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - add:
+          content: '/*'
+      - add:
+          content: ' * ------------------------------------------------------'
+      - add:
+          content: ' * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)'
+      - add:
+          content: ' * -------------------------------------------------------'
+      - add:
+          content: ' */'
+      - add:
+          content: '/* eslint-disable */'
+    config:
+      apolloClientVersion: 3
+      withHOC: false
+      withComponent: false
+      avoidOptionals: true

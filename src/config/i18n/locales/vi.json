@@ -1,0 +1,56 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "actions": "Hành động",
+    "confirm": "Xác nhận",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "submit": "Gửi"
+  },
+  "nav": {
+    "dashboard": "Tổng quan",
+    "content": "Nội dung",
+    "allContent": "Tất cả nội dung",
+    "createNew": "Tạo mới",
+    "categories": "Danh mục",
+    "media": "Thư viện",
+    "settings": "Cài đặt"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập...",
+    "adminPanelLogin": "Đăng nhập quản trị",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng"
+  },
+  "dashboard": {
+    "title": "Tổng quan",
+    "welcome": "Chào mừng trở lại",
+    "overview": "Tổng quan"
+  },
+  "content": {
+    "title": "Quản lý nội dung",
+    "createNew": "Tạo nội dung mới",
+    "categories": "Danh mục nội dung",
+    "comingSoon": "Sắp ra mắt"
+  },
+  "media": {
+    "title": "Quản lý thư viện",
+    "comingSoon": "Sắp ra mắt"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "comingSoon": "Sắp ra mắt"
+  }
+}
