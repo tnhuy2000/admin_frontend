@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: {
+        '@/codegen': path.resolve(__dirname, './codegen'),
         '@': path.resolve(__dirname, './src'),
       },
     },

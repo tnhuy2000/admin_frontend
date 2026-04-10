@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, HttpLink, from, ApolloLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { NAVIGATION_ROUTES } from '@/constants/routes';
@@ -22,9 +22,11 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // Error link to handle GraphQL errors
-const errorLink = onError(({ graphQLErrors, networkError }) => {
+const errorLink = onError((errorResponse: any) => {
+  const { graphQLErrors, networkError } = errorResponse;
+
   if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path, extensions }) => {
+    graphQLErrors.forEach(({ message, locations, path, extensions }: any) => {
       console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );

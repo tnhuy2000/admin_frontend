@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -12,12 +12,22 @@ interface NavigationItemProps {
 export const NavigationItem = ({ item, onItemClick }: NavigationItemProps) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
 
   // Check if current path matches this item or any of its children
   const isActive = location.pathname === item.href ||
     (hasChildren && item.children?.some(child => location.pathname === child.href));
+
+  // Auto-expand if current route is a child of this item
+  const shouldAutoExpand = hasChildren && item.children?.some(child => location.pathname === child.href);
+  const [isOpen, setIsOpen] = useState(shouldAutoExpand || false);
+
+  // Sync isOpen with current route (handles page reload and navigation)
+  useEffect(() => {
+    if (shouldAutoExpand) {
+      setIsOpen(true);
+    }
+  }, [shouldAutoExpand]);
 
   const handleParentClick = () => {
     if (hasChildren) {

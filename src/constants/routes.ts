@@ -21,8 +21,20 @@ export enum NAVIGATION_ROUTES {
   // Media routes
   MEDIA = '/media',
 
+  // Portfolio routes
+  PORTFOLIO = '/portfolio',
+  PORTFOLIO_NAVIGATION = '/portfolio/navigation',
+  PORTFOLIO_SOCIAL_LINKS = '/portfolio/social-links',
+  PORTFOLIO_SKILLS = '/portfolio/skills',
+  PORTFOLIO_WORK_EXPERIENCES = '/portfolio/work-experiences',
+  PORTFOLIO_TAGS = '/portfolio/tags',
+  PORTFOLIO_PROJECTS = '/portfolio/projects',
+  PORTFOLIO_ARTICLES = '/portfolio/articles',
+
   // Settings routes
   SETTINGS = '/settings',
+  SETTINGS_MANAGE = '/settings/manage',
+  SETTINGS_PUBLIC = '/settings/public',
 }
 
 /**

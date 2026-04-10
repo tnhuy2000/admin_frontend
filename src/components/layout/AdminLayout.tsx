@@ -6,6 +6,7 @@ import { navigationConfig } from '@/config/navigation';
 import { NavigationItem } from './NavigationItem';
 import { NAVIGATION_ROUTES } from '@/constants/routes';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { AdminLogo } from '@/components/AdminLogo';
 
 export const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -33,7 +34,7 @@ export const AdminLayout = () => {
       } lg:translate-x-0`}>
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 bg-gray-900">
-          <span className="text-white text-lg font-semibold">Admin Panel</span>
+          <AdminLogo height={32} fallbackText="Admin Panel" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden text-gray-400 hover:text-white"

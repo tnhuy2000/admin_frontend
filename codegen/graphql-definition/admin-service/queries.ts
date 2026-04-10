@@ -133,6 +133,7 @@ export const GET_SETTINGS = gql`
       description
       type
       isPublic
+      isDefault
       createdAt
       updatedAt
     }
@@ -140,7 +141,7 @@ export const GET_SETTINGS = gql`
 `;
 
 export const GET_SETTING = gql`
-  query GetSetting($key: String!) {
+  query setting($key: String!) {
     setting(key: $key) {
       _id
       key
@@ -149,14 +150,26 @@ export const GET_SETTING = gql`
       description
       type
       isPublic
+      isDefault
       createdAt
       updatedAt
     }
   }
-`;
+`
 
 export const GET_PUBLIC_SETTINGS = gql`
   query GetPublicSettings {
-    publicSettings
+    getPublicSettings {
+      _id
+      key
+      value
+      category
+      description
+      type
+      isPublic
+      isDefault
+      createdAt
+      updatedAt
+    }
   }
 `;

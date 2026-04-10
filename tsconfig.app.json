@@ -24,7 +24,8 @@
     /* Path alias */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/codegen/*": ["./codegen/*"]
     }
   },
   "include": ["src"]
