@@ -27,5 +27,37 @@ export default defineConfig(({ mode }) => {
       },
     },
     base: env.VITE_APP_BASENAME_PATH || '/',
+    build: {
+      chunkSizeWarningLimit: 1000,
+
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Tách thư viện core
+            vendor: ['react', 'react-dom', 'react-router-dom', 'zustand'],
+
+            // Tách Ant Design riêng (rất quan trọng)
+            antd: ['antd'],
+
+            // Tách Tiptap (editor nặng)
+            tiptap: [
+              '@tiptap/react',
+              '@tiptap/starter-kit',
+              '@tiptap/extension-color',
+              '@tiptap/extension-highlight',
+              '@tiptap/extension-image',
+              '@tiptap/extension-link',
+              '@tiptap/extension-placeholder',
+              '@tiptap/extension-text-align',
+              '@tiptap/extension-text-style',
+              '@tiptap/extension-underline'
+            ],
+
+            // Apollo + GraphQL
+            apollo: ['@apollo/client', 'graphql'],
+          }
+        }
+      }
+    }
   }
 })
