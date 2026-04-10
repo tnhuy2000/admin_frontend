@@ -3,7 +3,7 @@ import { message } from 'antd';
 import type { RcFile } from 'antd/es/upload/interface';
 
 // Get API base URL from environment or use default
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 export const UPLOAD_API_URL = `${API_BASE_URL}/upload`;
 
 /**

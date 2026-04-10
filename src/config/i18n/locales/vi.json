@@ -22,7 +22,15 @@
     "createNew": "Tạo mới",
     "categories": "Danh mục",
     "media": "Thư viện",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "portfolio": "Hồ sơ",
+    "navigation": "Điều hướng",
+    "socialLinks": "Liên kết mạng xã hội",
+    "skills": "Kỹ năng",
+    "workExperience": "Kinh nghiệm làm việc",
+    "tags": "Thẻ",
+    "projects": "Dự án",
+    "articles": "Bài viết"
   },
   "auth": {
     "login": "Đăng nhập",

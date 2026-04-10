@@ -4,7 +4,7 @@ import { onError } from '@apollo/client/link/error';
 import { NAVIGATION_ROUTES } from '@/constants/routes';
 
 const GRAPHQL_URI = `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4001'}/graphql`;
-const BASE_PATH = import.meta.env.BASE_URL || '/';
+const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
 
 const httpLink = new HttpLink({
   uri: GRAPHQL_URI,

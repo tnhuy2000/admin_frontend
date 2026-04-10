@@ -911,6 +911,7 @@ export type Setting = {
 export enum SettingCategory {
   Advanced = 'ADVANCED',
   Contact = 'CONTACT',
+  Content = 'CONTENT',
   General = 'GENERAL',
   Seo = 'SEO',
   Social = 'SOCIAL',

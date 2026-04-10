@@ -5,8 +5,8 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const port = parseInt(env.APP_PORT || '3000')
-  const backendUrl = env.BACKEND_URL || 'http://localhost:4001'
+  const port = parseInt(env.VITE_APP_PORT || '3000')
+  const backendUrl = env.VITE_BACKEND_URL || 'http://localhost:4001'
 
   return {
     plugins: [react()],
@@ -26,6 +26,6 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    base: env.APP_BASENAME_PATH || '/',
+    base: env.VITE_APP_BASENAME_PATH || '/',
   }
 })

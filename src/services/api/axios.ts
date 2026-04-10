@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NAVIGATION_ROUTES } from '@/constants/routes';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4001';
-const BASE_PATH = import.meta.env.BASE_URL || '/';
+const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

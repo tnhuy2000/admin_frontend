@@ -1,6 +1,5 @@
 overwrite: true
-# schema: ${GRAPHQL_URI_GEN}
-schema: http://localhost:4001/graphql
+schema: ${VITE_GRAPHQL_URI_GEN}
 documents:
   - 'codegen/graphql-definition/admin-service/**/*.ts'
   - 'codegen/graphql-definition/admin-service/**/*.graphql'

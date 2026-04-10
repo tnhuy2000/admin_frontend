@@ -22,7 +22,16 @@
     "createNew": "Create New",
     "categories": "Categories",
     "media": "Media",
-    "settings": "Settings"
+    "settings": "Settings",
+    "portfolio": "Portfolio",
+    "navigation": "Navigation",
+    "socialLinks": "Social Links",
+    "skills": "Skills",
+    "workExperience": "Work Experience",
+    "tags": "Tags",
+    "projects": "Projects",
+    "articles": "Articles"
+
   },
   "auth": {
     "login": "Login",
