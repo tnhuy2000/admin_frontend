@@ -564,7 +564,7 @@ export type MutationUpdateServiceArgs = {
 
 
 export type MutationUpdateSettingArgs = {
-  input: UpdateSettingInput;
+  input: InputMaybe<UpdateSettingInput>;
   key: Scalars['String']['input'];
 };
 
@@ -1264,7 +1264,7 @@ export type CreateSettingMutation = { __typename?: 'Mutation', createSetting: { 
 
 export type UpdateSettingMutationVariables = Exact<{
   key: Scalars['String']['input'];
-  input: UpdateSettingInput;
+  input: InputMaybe<UpdateSettingInput>;
 }>;
 
 

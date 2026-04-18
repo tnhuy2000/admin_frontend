@@ -114,7 +114,7 @@ export const CREATE_SETTING = gql`
 `;
 
 export const UPDATE_SETTING = gql`
-  mutation UpdateSetting($key: String!, $input: UpdateSettingInput!) {
+  mutation UpdateSetting($key: String!, $input: UpdateSettingInput) {
     updateSetting(key: $key, input: $input) {
       _id
       key

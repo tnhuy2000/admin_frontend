@@ -68,7 +68,7 @@ const LinkDocumentUpload: React.FC<LinkDocumentUploadProps> = ({
         onChange?.({
           url: fileList[0].url,
           fileName: fileList[0].name,
-          type: 'file' as TypeDocument,
+          type: 'link' as TypeDocument,
         });
       } else {
         onChange?.(null);
@@ -108,7 +108,7 @@ const LinkDocumentUpload: React.FC<LinkDocumentUploadProps> = ({
       onChange?.({
         url,
         fileName: file.name,
-        type: 'file' as TypeDocument,
+        type: 'link' as TypeDocument,
       });
       message.success('Upload successful!');
     } catch (error: any) {

@@ -59,7 +59,7 @@ export const uploadFileAsDocument = async (file: RcFile, isImage: boolean = fals
   return {
     url,
     fileName: file.name,
-    type: TypeDocument.File,
+    type: TypeDocument.Link,
   };
 };
 
