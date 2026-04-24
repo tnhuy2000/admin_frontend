@@ -30,7 +30,9 @@
     "workExperience": "Kinh nghiệm làm việc",
     "tags": "Thẻ",
     "projects": "Dự án",
-    "articles": "Bài viết"
+    "articles": "Bài viết",
+    "manageSettings": "Quản lý cài đặt",
+    "publicSettings": "Cài đặt công khai"
   },
   "auth": {
     "login": "Đăng nhập",

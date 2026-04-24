@@ -28,145 +28,91 @@ export const useAuth = () => {
   return context;
 };
 
+const clearSession = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  sessionStorage.removeItem('currentUser');
+};
+
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(() => {
-    // Initialize user from sessionStorage if available (persists across HMR)
-    const cachedUser = sessionStorage.getItem('currentUser');
-    return cachedUser ? JSON.parse(cachedUser) : null;
+    try {
+      const cached = sessionStorage.getItem('currentUser');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
   });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in (check localStorage for token)
     const token = localStorage.getItem('accessToken');
-    const cachedUser = sessionStorage.getItem('currentUser');
 
-    // If we have both token and cached user, restore session immediately
-    if (token && cachedUser) {
-      console.log('Restoring session from cache');
-      try {
-        const userData = JSON.parse(cachedUser);
-        setUser(userData);
-        setIsLoading(false);
-
-        // Verify token in background (don't block UI)
-        apolloClient
-          .query<GetMeQuery>({
-            query: GET_ME,
-            fetchPolicy: 'network-only',
-          })
-          .then(({ data }) => {
-            if (data?.me) {
-              // Update with fresh data
-              const freshUser = {
-                email: data.me.email,
-                name: data.me.name,
-                role: data.me.role,
-              };
-              setUser(freshUser);
-              sessionStorage.setItem('currentUser', JSON.stringify(freshUser));
-            } else {
-              // No user data, logout
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('refreshToken');
-              sessionStorage.removeItem('currentUser');
-              setUser(null);
-            }
-          })
-          .catch((error) => {
-            console.error('Background auth check error:', error);
-            // Only logout on auth errors, not network errors
-            if (
-              error?.graphQLErrors?.some((e: any) =>
-                e?.extensions?.code === 'UNAUTHENTICATED' ||
-                e?.extensions?.code === 'FORBIDDEN'
-              ) ||
-              error?.networkError?.statusCode === 401
-            ) {
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('refreshToken');
-              sessionStorage.removeItem('currentUser');
-              setUser(null);
-            }
-            // On network errors, keep cached session
-          });
-      } catch (e) {
-        console.error('Error parsing cached user:', e);
-        setIsLoading(false);
-      }
+    if (!token) {
+      clearSession();
+      setIsLoading(false);
       return;
     }
 
-    // No cached session, fetch fresh data
-    if (token) {
-      console.log('Token found, fetching user data...');
-      apolloClient
-        .query<GetMeQuery>({
-          query: GET_ME,
-          fetchPolicy: 'network-only',
-        })
-        .then(({ data }) => {
-          console.log('GetMe response:', data);
-          if (data?.me) {
-            const userData = {
-              email: data.me.email,
-              name: data.me.name,
-              role: data.me.role,
-            };
-            setUser(userData);
-            sessionStorage.setItem('currentUser', JSON.stringify(userData));
-            console.log('User data set successfully');
-          } else {
-            console.log('No user data in response');
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            sessionStorage.removeItem('currentUser');
-          }
-        })
-        .catch((error) => {
-          console.error('GetMe error:', error);
-          // Only clear tokens if it's a definite authentication error
-          if (
-            error?.graphQLErrors?.some((e: any) =>
-              e?.extensions?.code === 'UNAUTHENTICATED' ||
-              e?.extensions?.code === 'FORBIDDEN'
-            ) ||
-            error?.networkError?.statusCode === 401
-          ) {
-            console.log('Authentication error, clearing tokens');
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            sessionStorage.removeItem('currentUser');
-            setUser(null);
-          }
-          // On other errors (network), keep tokens for retry
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      console.log('No token found');
-      sessionStorage.removeItem('currentUser');
+    // Restore cache ngay để UI không bị block
+    const cached = sessionStorage.getItem('currentUser');
+    if (cached) {
+      try {
+        setUser(JSON.parse(cached));
+      } catch {
+        // cache lỗi, sẽ fetch lại bên dưới
+      }
       setIsLoading(false);
     }
+
+    // Verify token ngầm — Apollo Error Link tự xử lý refresh nếu hết hạn
+    apolloClient
+      .query<GetMeQuery>({
+        query: GET_ME,
+        fetchPolicy: 'network-only',
+      })
+      .then(({ data, errors }: any) => {
+        if (errors && errors.length > 0) {
+          // Có lỗi GraphQL trả về nhưng không được xử lý bởi errorLink (VD: lỗi 500, lỗi server)
+          // Không nên tự động xóa phiên đăng nhập để tránh văng app oan uổng.
+          return;
+        }
+
+        if (data?.me) {
+          const fresh: User = {
+            email: data.me.email,
+            name: data.me.name,
+            role: data.me.role,
+          };
+          setUser(fresh);
+          sessionStorage.setItem('currentUser', JSON.stringify(fresh));
+        } else {
+          // Server trả về thành công nhưng hoàn toàn không có user → logout
+          clearSession();
+          setUser(null);
+        }
+      })
+      .catch(() => {
+        // Apollo Error Link đã xử lý refresh + retry
+        // Nếu vào đây nghĩa là refresh cũng fail → đã redirect /login
+        // Không cần làm gì thêm
+      })
+      .finally(() => {
+        if (!cached) setIsLoading(false);
+      });
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
       const data = await authService.login({ email, password });
 
-      // Store tokens
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
-
-      // Cache user data in sessionStorage for HMR persistence
       sessionStorage.setItem('currentUser', JSON.stringify(data.user));
-
-      // Set user data
       setUser(data.user);
     } catch (error) {
       console.error('Login error:', error);
@@ -176,30 +122,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = async () => {
     try {
-      // Call backend logout API to invalidate refresh token
       await authService.logout();
     } catch (error) {
       console.error('Logout API error:', error);
-      // Continue with logout even if API call fails
     } finally {
-      // Clear all storage and user state
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      sessionStorage.removeItem('currentUser');
+      clearSession();
       setUser(null);
-
-      // Clear Apollo cache
       await apolloClient.clearStore();
     }
   };
 
-  const value = {
-    user,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    isLoading,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

@@ -1,7 +1,8 @@
-import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, from, Observable } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { NAVIGATION_ROUTES } from '@/constants/routes';
+import { tokenService } from '../api/token.service';
 
 const GRAPHQL_URI = `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4001'}/graphql`;
 const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
@@ -22,27 +23,32 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // Error link to handle GraphQL errors
-const errorLink = onError((errorResponse: any) => {
-  const { graphQLErrors, networkError } = errorResponse;
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }: any) => {
+  const isUnauth =
+    graphQLErrors?.some((e: any) =>
+      e.extensions?.code === 'UNAUTHENTICATED' ||
+      e.extensions?.code === 'FORBIDDEN'
+    ) || (networkError as any)?.statusCode === 401;
 
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path, extensions }: any) => {
-      console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      );
+  if (!isUnauth) return;
 
-      // Handle unauthorized errors
-      if (extensions?.code === 'UNAUTHENTICATED') {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+  return new Observable(observer => {
+    tokenService.refresh().then(newToken => {
+      if (!newToken) {
+        const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
         window.location.href = `${BASE_PATH}${NAVIGATION_ROUTES.LOGIN}`.replace('//', '/');
+        observer.error(new Error('Refresh failed'));
+        return;
       }
-    });
-  }
 
-  if (networkError) {
-    console.error(`[Network error]: ${networkError}`);
-  }
+      // Retry request gốc
+      forward(operation).subscribe({
+        next: observer.next.bind(observer),
+        error: observer.error.bind(observer),
+        complete: observer.complete.bind(observer),
+      });
+    }).catch(err => observer.error(err));
+  });
 });
 
 export const apolloClient = new ApolloClient({

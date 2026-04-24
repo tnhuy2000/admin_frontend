@@ -44,7 +44,7 @@ export const AdminLayout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-2 py-4 space-y-1">
+        <nav className="overflow-y-auto flex-1 px-2 py-4 space-y-1">
           {navigationConfig.map((item) => (
             <NavigationItem
               key={item.name}

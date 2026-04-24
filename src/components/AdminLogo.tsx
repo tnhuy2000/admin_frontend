@@ -28,6 +28,7 @@ export const AdminLogo: React.FC<AdminLogoProps> = ({
         style={{
           height: `${height}px`,
           objectFit: 'contain',
+          margin: '20px 10px',
           ...style,
         }}
       />

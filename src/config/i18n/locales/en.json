@@ -30,7 +30,9 @@
     "workExperience": "Work Experience",
     "tags": "Tags",
     "projects": "Projects",
-    "articles": "Articles"
+    "articles": "Articles",
+    "manageSettings": "Manage Settings",
+    "publicSettings": "Public Settings"
 
   },
   "auth": {
