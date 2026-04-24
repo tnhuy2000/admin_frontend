@@ -35,7 +35,6 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }: 
   return new Observable(observer => {
     tokenService.refresh().then(newToken => {
       if (!newToken) {
-        const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
         window.location.href = `${BASE_PATH}${NAVIGATION_ROUTES.LOGIN}`.replace('//', '/');
         observer.error(new Error('Refresh failed'));
         return;

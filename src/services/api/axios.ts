@@ -49,7 +49,6 @@ axiosInstance.interceptors.response.use(
       }
 
       // Refresh fail → redirect
-      const BASE_PATH = import.meta.env.VITE_APP_BASENAME_PATH || '/';
       window.location.href = `${BASE_PATH}${NAVIGATION_ROUTES.LOGIN}`.replace('//', '/');
       return Promise.reject(error);
     }
