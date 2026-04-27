@@ -22,34 +22,73 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// Error link to handle GraphQL errors
-const errorLink = onError(({ graphQLErrors, networkError, operation, forward }: any) => {
-  const isUnauth =
-    graphQLErrors?.some((e: any) =>
-      e.extensions?.code === 'UNAUTHENTICATED' ||
-      e.extensions?.code === 'FORBIDDEN'
-    ) || (networkError as any)?.statusCode === 401;
+const errorLink = onError(
+  ({ error, operation, forward }) => {
+    console.log('apollo error:', error);
 
-  if (!isUnauth) return;
+    const isUnauth =
+      error?.message?.includes(
+        'Unauthorized',
+      ) ||
+      error?.message?.includes(
+        'UNAUTHENTICATED',
+      ) ||
+      error?.message?.includes(
+        'FORBIDDEN',
+      );
 
-  return new Observable(observer => {
-    tokenService.refresh().then(newToken => {
-      if (!newToken) {
-        window.location.href = `${BASE_PATH}${NAVIGATION_ROUTES.LOGIN}`.replace('//', '/');
-        observer.error(new Error('Refresh failed'));
-        return;
-      }
 
-      // Retry request gốc
-      forward(operation).subscribe({
-        next: observer.next.bind(observer),
-        error: observer.error.bind(observer),
-        complete: observer.complete.bind(observer),
-      });
-    }).catch(err => observer.error(err));
-  });
-});
+    if (!isUnauth) return;
 
+    return new Observable((observer) => {
+      tokenService
+        .refresh()
+        .then((newToken) => {
+
+          if (!newToken) {
+            localStorage.clear();
+
+            window.location.href =
+              '/login';
+
+            observer.error(
+              new Error(
+                'Refresh failed',
+              ),
+            );
+            return;
+          }
+
+          operation.setContext({
+            headers: {
+              ...operation.getContext()
+                .headers,
+              Authorization:
+                `Bearer ${newToken}`,
+            },
+          });
+
+          forward(operation).subscribe({
+            next:
+              observer.next.bind(
+                observer,
+              ),
+            error:
+              observer.error.bind(
+                observer,
+              ),
+            complete:
+              observer.complete.bind(
+                observer,
+              ),
+          });
+        })
+        .catch((err) => {
+          observer.error(err);
+        });
+    });
+  },
+);
 export const apolloClient = new ApolloClient({
   link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
